@@ -5,6 +5,7 @@
 ## This package is not yet stable
 **Still under active developer, no tagged version released  yet.** 
 
+[View documentation - https://jamalyusuf.github.io/luxon/](https://jamalyusuf.github.io/luxon/)
 ## Overview
 ![luxon Logo](docs/assets/logo.png)
 The `luxon` package is a powerful, feature-rich extension of Go’s standard `time` package, designed to simplify and enhance time-related operations in Go applications. Inspired by the JavaScript library Luxon, it provides an immutable `DateTime` type, advanced time zone handling, business day calculations, recurrence rules, natural language parsing, and more. The package aims to address common pain points in time manipulation, making it easier to handle scheduling, reporting, and user-facing time displays in business applications.
