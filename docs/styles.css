@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+pre[class*="language-"] {
+    @apply bg-gray-800 text-white p-4 rounded-lg overflow-x-auto;
+}
+
+code[class*="language-"] {
+    @apply text-sm;
+}

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxon for Go</title>
+    <link href="prism.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Markdown styles */
+        .markdown-body {
+            line-height: 1.6;
+            color: #4a5568;
+        }
+        .markdown-body h3 {
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            font-size: 1.25em;
+            font-weight: 600;
+            color: #1a202c;
+        }
+        .markdown-body p {
+            margin-bottom: 1em;
+        }
+        .markdown-body pre {
+            background: #1e1e1e;
+            padding: 1em;
+            border-radius: 0.5em;
+            overflow-x: auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .markdown-body code {
+            font-family: 'Fira Code', Consolas, Monaco, 'Ubuntu Mono', monospace;
+            font-size: 0.9em;
+        }
+        /* Inline code styling */
+        .markdown-body code:not(pre code) {
+            background: #f7fafc;
+            padding: 0.2em 0.4em;
+            border-radius: 0.25em;
+            color: #e53e3e;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+<div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 bg-white shadow-lg p-6 fixed h-full overflow-y-auto transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
+        <div class="flex items-center mb-6">
+            <img src="assets/logo.png" alt="Luxon Logo" class="h-10 mr-3">
+            <h1 class="text-2xl font-bold text-gray-800">Luxon for Go</h1>
+        </div>
+        <button id="sidebar-toggle" class="md:hidden text-gray-600 mb-4 focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+        <nav id="nav-links" class="space-y-3">
+            <!-- Populated by JavaScript -->
+        </nav>
+    </aside>
+    <!-- Main Content -->
+    <main class="ml-0 md:ml-64 p-8 w-full max-w-5xl mx-auto transition-all duration-300">
+        <button id="sidebar-open" class="md:hidden mb-4 text-gray-600 focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+        </button>
+        <div id="content" class="bg-white p-8 rounded-xl shadow-md">
+            <!-- Populated by JavaScript -->
+        </div>
+    </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/marked@15.0.8/lib/marked.umd.min.js"></script>
+<script src="prism.js"></script>
+<script src="scripts.js"></script>
+</body>
+</html>

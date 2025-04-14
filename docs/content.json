@@ -1,0 +1,126 @@
+{
+  "title": "Luxon for Go",
+  "introduction": {
+    "title": "Introduction",
+    "content": "Luxon is a powerful, immutable time handling library for Go, extending the standard `time` package with features like time zone caching, business day calculations, recurrence rules, and natural language parsing. Inspired by JavaScript's [Luxon](https://moment.github.io/luxon/#/), it simplifies complex time operations for enterprise applications, user interfaces, and testing scenarios."
+  },
+  "goals": {
+    "title": "Goals",
+    "content": [
+      "Provide an intuitive API for time manipulation and formatting.",
+      "Ensure thread safety with immutable DateTime operations.",
+      "Support enterprise needs with business calendars and recurrence rules.",
+      "Optimize performance for large-scale data processing.",
+      "Facilitate testing with mockable time sources."
+    ]
+  },
+  "features": {
+    "title": "Features",
+    "content": [
+      "Immutable `DateTime` type for safe concurrency.",
+      "Cached time zone conversions for performance.",
+      "`BusinessCalendar` for scheduling and billing.",
+      "`RecurrenceRule` supporting iCalendar RRULE standards.",
+      "Natural language parsing for user-friendly inputs.",
+      "Batch processing for efficient data handling.",
+      "JSON and SQL integration for persistence.",
+      "`MockTimer` for testing time-sensitive logic."
+    ]
+  },
+  "getting_started": {
+    "title": "Getting Started",
+    "content": "Luxon is easy to integrate into any Go project. Follow these steps to get started:\n\n### Installation\nInstall Luxon using Go modules:\n```bash\ngo get github.com/JamalYusuf/luxon\n```\n**Requires**: Go 1.18 or later.\n\n### Quick Example\nHere's a simple example to create and manipulate a `DateTime`:\n```go\npackage main\n\nimport (\n\t\"fmt\"\n\t\"github.com/JamalYusuf/luxon\"\n)\n\nfunc main() {\n\tdt := luxon.Now()\n\tfuture := dt.PlusDays(10).InZone(\"America/New_York\")\n\tfmt.Println(\"Future date:\", future.FormatLuxon(\"yyyy-MM-dd HH:mm\"))\n}\n```\nThis code creates a `DateTime`, adds 10 days, converts to New York time, and formats it. Run it to explore Luxon’s fluent API!"
+  },
+  "examples": {
+    "title": "Examples",
+    "items": [
+      {
+        "title": "Basic Time Manipulation",
+        "code": "package main\n\nimport (\n\t\"fmt\"\n\t\"time\"\n\t\"github.com/JamalYusuf/luxon\"\n)\n\nfunc main() {\n\t// Get current time\n\tdt := luxon.Now()\n\n\t// Add 5 days and convert to Tokyo time\n\tfuture, err := dt.PlusDays(5).InZone(\"Asia/Tokyo\")\n\tif err != nil {\n\t\tfmt.Println(\"Error:\", err)\n\t\treturn\n\t}\n\n\t// Format using Luxon-style tokens\n\tformatted := future.FormatLuxon(\"yyyy-MM-dd HH:mm\")\n\tfmt.Println(\"Future in Tokyo:\", formatted)\n\n\t// Snap to start of month\n\tstartOfMonth, err := future.StartOf(\"month\")\n\tif err != nil {\n\t\tfmt.Println(\"Error:\", err)\n\t\treturn\n\t}\n\tfmt.Println(\"Start of month:\", startOfMonth.Format(\"2006-01-02\"))\n}",
+        "description": "This example demonstrates creating a `DateTime`, adding 5 days, converting to Tokyo time, formatting with Luxon-style tokens, and snapping to the start of the month. It showcases Luxon’s fluent API and immutability, ideal for building reliable APIs or user interfaces."
+      },
+      {
+        "title": "Business Day Scheduling",
+        "code": "package main\n\nimport (\n\t\"fmt\"\n\t\"time\"\n\t\"github.com/JamalYusuf/luxon\"\n)\n\nfunc main() {\n\t// Create a business calendar for UTC\n\tcal := luxon.NewBusinessCalendar(time.UTC)\n\n\t// Set weekends as non-working days\n\tcal.SetNonWorkingDay(time.Saturday)\n\tcal.SetNonWorkingDay(time.Sunday)\n\n\t// Add a holiday\n\tholiday := time.Date(2023, 12, 25, 0, 0, 0, 0, time.UTC)\n\tcal.AddHoliday(holiday)\n\n\t// Define date range\n\tstart := luxon.Now()\n\tend := start.PlusDays(14)\n\n\t// Calculate business days\n\tbusinessDays := cal.BusinessDaysBetween(start, end)\n\tfmt.Println(\"Business days:\", businessDays)\n\n\t// Find next business day\n\tnext := cal.NextBusinessDay(start)\n\tfmt.Println(\"Next business day:\", next.Format(\"2006-01-02\"))\n}",
+        "description": "This example sets up a `BusinessCalendar` with weekends and a holiday, then calculates business days between two dates and finds the next business day. It’s perfect for payroll systems, delivery scheduling, or any application needing to respect workdays."
+      },
+      {
+        "title": "Recurring Events",
+        "code": "package main\n\nimport (\n\t\"fmt\"\n\t\"github.com/JamalYusuf/luxon\"\n)\n\nfunc main() {\n\t// Parse an iCalendar RRULE\n\trule, err := luxon.ParseRRule(\"FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,WE;COUNT=4\")\n\tif err != nil {\n\t\tfmt.Println(\"Error:\", err)\n\t\treturn\n\t}\n\n\t// Define time range\n\tstart := luxon.Now()\n\tend := start.PlusDays(30)\n\n\t// Generate occurrences\n\toccurrences, err := rule.GenerateOccurrences(start, end)\n\tif err != nil {\n\t\tfmt.Println(\"Error:\", err)\n\t\treturn\n\t}\n\n\t// Print occurrences\n\tfor i, occ := range occurrences {\n\t\tfmt.Printf(\"Event %d: %s\\n\", i+1, occ.Format(\"2006-01-02\"))\n\t}\n}",
+        "description": "This example parses an iCalendar RRULE for events every other week on Mondays and Wednesdays, generating up to 4 occurrences. It’s ideal for calendar applications or automated reminders, showcasing Luxon’s scheduling power."
+      },
+      {
+        "title": "Batch Processing for Analytics",
+        "code": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"time\"\n\t\"github.com/JamalYusuf/luxon\"\n)\n\nfunc main() {\n\tctx := context.Background()\n\n\t// Create a slice of DateTime instances\n\tdts := []luxon.DateTime{\n\t\tluxon.Now(),\n\t\tluxon.Now().PlusDays(1),\n\t\tluxon.Now().PlusDays(2),\n\t}\n\n\t// Convert to London time in parallel\n\tconverted, err := luxon.BatchInZone(ctx, dts, \"Europe/London\")\n\tif err != nil {\n\t\tfmt.Println(\"Error:\", err)\n\t\treturn\n\t}\n\n\t// Format results\n\tformatted, err := luxon.BatchFormat(ctx, converted, \"2006-01-02 HH:mm\")\n\tif err != nil {\n\t\tfmt.Println(\"Error:\", err)\n\t\treturn\n\t}\n\n\t// Print formatted times\n\tfor i, f := range formatted {\n\t\tfmt.Printf(\"Date %d: %s\\n\", i+1, f)\n\t}\n}",
+        "description": "This example performs batch time zone conversion and formatting for a slice of `DateTime` instances, leveraging parallel processing for efficiency. It’s suited for analytics platforms or APIs handling large datasets."
+      },
+      {
+        "title": "Testing with MockTimer",
+        "code": "package main\n\nimport (\n\t\"fmt\"\n\t\"time\"\n\t\"github.com/JamalYusuf/luxon\"\n)\n\nfunc main() {\n\t// Create a mock timer set to a specific time\n\tmockTime := time.Date(2023, 10, 1, 12, 0, 0, 0, time.UTC)\n\tmock := luxon.NewMockTimer(mockTime, time.UTC)\n\tluxon.SetTimer(mock)\n\n\t// Check current time\n\tfmt.Println(\"Mock time:\", luxon.Now().Format(\"2006-01-02 HH:mm\"))\n\n\t// Advance time by 1 day\n\terr := mock.Advance(24 * time.Hour)\n\tif err != nil {\n\t\tfmt.Println(\"Error:\", err)\n\t\treturn\n\t}\n\n\t// Check advanced time\n\tfmt.Println(\"Advanced time:\", luxon.Now().Format(\"2006-01-02 HH:mm\"))\n\n\t// Reset to default timer\n\tluxon.ResetTimer()\n}",
+        "description": "This example uses `MockTimer` to simulate a specific time and advance it, demonstrating how to test time-sensitive logic like expirations or schedules without waiting for real time."
+      }
+    ]
+  },
+  "api_overview": {
+    "title": "API Overview",
+    "content": "Luxon’s API is organized into logical modules:\n\n- **DateTime**: Core type for time manipulation, with methods like `PlusDays`, `InZone`, and `FormatLuxon`. Use it for parsing, formatting, and arithmetic.\n- **Duration**: Enhances `time.Duration` with human-readable formatting (`Humanize`) and conversions (`AsHours`).\n- **Interval**: Manages time ranges with operations like `Intersect` and `Contains`.\n- **BusinessCalendar**: Defines workdays and holidays, supporting methods like `BusinessDaysBetween`.\n- **RecurrenceRule**: Handles event scheduling with iCalendar RRULE support.\n- **Timer**: Abstracts time operations for testing, with `DefaultTimer` and `MockTimer` implementations.\n- **Batch Processing**: Optimizes bulk operations with functions like `BatchInZone`.\n\nEach module is designed to be intuitive and composable, allowing developers to chain operations fluently (e.g., `dt.PlusDays(5).InZone(\"UTC\")`)."
+  },
+  "advanced_usage": {
+    "title": "Advanced Usage",
+    "content": "Luxon shines in complex scenarios:\n\n### Custom Business Hours\nConfigure `BusinessCalendar` with specific hours (e.g., 9 AM to 5 PM) using `SetBusinessHours` to calculate precise business hour durations for SLAs or billing.\n\n### Complex Recurrence Patterns\nUse `RecurrenceRule` with `ByHour` and `ByMinute` for fine-grained scheduling, such as 'daily at 9 AM and 3 PM'.\n\n### Batch Processing\nCombine `BatchInZone` and `BatchFormat` for efficient data pipelines, processing thousands of timestamps in parallel.\n\n### Testing Time Logic\nLeverage `MockTimer` to simulate edge cases, like leap years or time zone transitions, ensuring robust application behavior.\n\n### Natural Language in UIs\nParse user inputs like 'first Tuesday of next month' with `ParseNatural` to build flexible booking forms."
+  },
+  "testing_with_luxon": {
+    "title": "Testing with Luxon",
+    "content": "Testing time-sensitive logic is easy with Luxon’s `Timer` interface:\n\n- **Freeze Time**: Use `MockTimer` to set a specific time for testing expirations.\n- **Simulate Zones**: Test time zone logic with `InZone`.\n- **Advance Time**: Move time forward with `Advance` for schedules or timeouts.\n\n**Workflow**:\n1. Create a `MockTimer`.\n2. Set it with `SetTimer`.\n3. Manipulate time.\n4. Reset with `ResetTimer`.\n\nThis ensures deterministic, fast tests for payment systems or schedulers."
+  },
+  "use_cases": {
+    "title": "Use Cases",
+    "items": [
+      {
+        "title": "Enterprise Scheduling",
+        "content": "Calculate business days for payroll or delivery schedules, using `BusinessCalendar` to account for holidays and weekends."
+      },
+      {
+        "title": "Event Management",
+        "content": "Generate recurring events for calendar apps with `RecurrenceRule`, supporting patterns like 'every other Monday'."
+      },
+      {
+        "title": "User Interfaces",
+        "content": "Display relative times ('2 days ago') or parse inputs ('next Friday') for booking systems."
+      },
+      {
+        "title": "Data Analytics",
+        "content": "Process large datasets with `BatchInZone` and `BatchFormat` for reporting."
+      },
+      {
+        "title": "Testing and QA",
+        "content": "Simulate time with `MockTimer` to test expiration dates or scheduled tasks."
+      }
+    ]
+  },
+  "faq": {
+    "title": "FAQ",
+    "content": [
+      {
+        "question": "Why use Luxon instead of the standard time package?",
+        "answer": "Luxon offers immutability, business logic, recurrence rules, and natural language support, reducing complexity."
+      },
+      {
+        "question": "Is Luxon thread-safe?",
+        "answer": "Yes, `DateTime` is immutable, ensuring safe concurrent use."
+      },
+      {
+        "question": "How does Luxon handle performance?",
+        "answer": "It uses time zone caching and batch processing for high-throughput scenarios."
+      },
+      {
+        "question": "Can I test time-sensitive code with Luxon?",
+        "answer": "Yes, `MockTimer` supports simulating time for robust testing."
+      },
+      {
+        "question": "Does Luxon support custom calendars?",
+        "answer": "Yes, `BusinessCalendar` allows defining holidays and hours."
+      }
+    ]
+  }
+}
